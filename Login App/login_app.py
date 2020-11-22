@@ -20,7 +20,7 @@ login_app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 login_app.config['MAIL_PORT'] = 587
 login_app.config['MAIL_USE_TLS'] = True
 login_app.config['MAIL_USERNAME'] = 'pednekar37419@gmail.com'
-login_app.config['MAIL_PASSWORD'] = 'Sona4999'
+login_app.config['MAIL_PASSWORD'] = 'YourPassword'
 
 bootstrap = Bootstrap(login_app)
 db = SQLAlchemy(login_app)
@@ -215,10 +215,10 @@ def reset_token(token):
         form = ResetPasswordForm()
         if form.validate_on_submit():
             # hashing the password...
-            hashed_pass = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            hashed_password = generate_password_hash(form.password.data, method='sha256')
 
             # Adding to database...
-            user.password = hashed_pass
+            user.password = hashed_password
             db.session.commit()
 
             flash(f'Password is updated ! Login Now!!', 'success')
@@ -226,31 +226,6 @@ def reset_token(token):
         return render_template('reset_token.html', title="Reset Password", form =form)
 
 
-#def reset_token(token):    
-#    user = User.verify_reset_token(token)
-#    if user is None:
-#        flash('That is an invalid or expired token', 'warning')
-#        return redirect(url_for('reset_request'))
-#    form = ResetPasswordForm()
-#    if form.validate_on_submit():
-#        hashed_password = generate_password_hash(form.password.data, method='sha256')
-#        user.password = hashed_password
-#        db.session.commit()
-#        flash('Your password has been updated! You are now able to log in', 'success')
-#        return redirect(url_for('login'))
-#    else:
-#        return render_template('reset_token.html', title='Reset Password', form=form)
-
-
-
-    #if form.validate_on_submit():
-    #    hashed_password = generate_password_hash(form.password.data, method='sha256')
-    #    user.password = hashed_password
-    #    db.session.commit()
-    #    flash('Your password has been updated! You are now able to log in', 'success')
-    #    return redirect(url_for('login'))
-
-    #return render_template('reset_token.html', title='Reset Password', form=form)
     
 if __name__ == '__main__':
     login_app.run(debug=True)
